@@ -39,6 +39,23 @@ object introduccionAscala {
 
     for(book<-books2) println(book)
 
+    for(book<-books2
+      if book.contains("Scala")
+    )println(book)
+
+    for {book2 <- books2
+         bookVal = book2.toUpperCase
+    }println(bookVal)
+
+    val res = 44 match {
+
+      case 44 => true // if wematch 44,theresult is true
+
+      case _ => false // otherwisetheresult isfalse
+    }
+    println("match")
+    print(res)
+
 
   }
 }
