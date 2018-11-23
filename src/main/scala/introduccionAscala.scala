@@ -9,8 +9,19 @@ object introduccionAscala {
     val y = 10
     var x= 10
     x = 15
+    val w = 10e20
+    val m:Byte = 127
+    val bool = !false
+    var x1 = 'X'
+    var person: Any = "Craig"
+    person = 22
 
+    val bookTitle = "Beginning with Scala"
+    println(s"Book Title is $bookTitle")
 
-
+    def hello() = {"Hello world"}
+    //hello()
+    def square (i:Int) = {i*i}
+    println(square(100))
   }
 }
