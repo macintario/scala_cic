@@ -44,7 +44,7 @@ object introduccionAscala {
     )println(book)
 
     for {book2 <- books2
-         bookVal = book2.toUpperCase
+         bookVal = book2.toUpperCase()
     }println(bookVal)
 
     val res = 44 match {
@@ -54,8 +54,43 @@ object introduccionAscala {
       case _ => false // otherwisetheresult isfalse
     }
     println("match")
-    print(res)
+    println(res)
 
+    /////////////////////////////////
+    //// Programacion funcional///////
+    /////////////////////////////////
+    def functionalProgramming() = {
+      //asignar una fucion a una variable
+      val doubler = (i: Int) => {
+        i * 2
+      }
+      println(doubler(2))
+    }
+
+    //pasar funciones a otras funciones
+    def operation(functionparam:(Int, Int) => Int) {
+      println(functionparam(4,4))
+    }
+
+    val add = (x: Int, y:Int) => { x + y }
+
+    operation(add)
+
+    val multiply = (x: Int, y:Int) => { x * y }
+
+    operation(multiply)
+
+    val subtract = (x: Int, y:Int) => { x - y }
+
+    operation(subtract)
+
+    //
+    // //retornar fuciones
+    def greeting() = (name: String) => {"hello" + " " + name}
+    //
+    val greet = greeting()
+    //
+    println(greet("Reader"))
 
   }
 }
