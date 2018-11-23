@@ -23,5 +23,22 @@ object introduccionAscala {
     //hello()
     def square (i:Int) = {i*i}
     println(square(100))
+
+    val books2: List[String] = List("Beginning Scala", "Beginning Groovy", "Beginning Java")
+    println(books2)
+
+    if(x.equals(10)){
+      println("Line one")
+      println("Line two")
+    }else{
+      println(x)
+    }
+    while(!bool){
+      println("Working ....")
+    }
+
+    for(book<-books2) println(book)
+
+
   }
 }
