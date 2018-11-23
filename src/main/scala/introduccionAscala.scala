@@ -92,5 +92,8 @@ object introduccionAscala {
     //
     println(greet("Reader"))
 
+    var i = 5
+    var j = i.+(7)
+    println(j)
   }
 }
