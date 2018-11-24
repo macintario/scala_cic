@@ -302,7 +302,7 @@ object introduccionAscala {
 
       println("Array")
       var  arr = Array(1,0,20,30,40,40,70) dropRight 3
-      println(arr)
+      println(arr.toList)
 
       println("Map")
       val mp = Map("a" -> 10, "b" -> 15, "c" -> 1) dropWhile (x=> x._2==1)
