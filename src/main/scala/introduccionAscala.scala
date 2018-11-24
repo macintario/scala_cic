@@ -386,17 +386,31 @@ object introduccionAscala {
         return MasterList
       }
 
-      var ALHCorpus = "rep_heigth_weights.csv"
-      var delimiter = "|" // I changed your delimiter to pipe since that's what's in your sample data.
+      var ALHCorpus = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/rep_height_weights.csv"
+      var delimiter = "," // I changed your delimiter to pipe since that's what's in your sample data.
 
       var CSVContents = CSVReader(ALHCorpus, delimiter)
 
       println(CSVContents(0))
+
+      var weights = new Array [Double](0)
+      var weightsReported= new Array [Double] (0)
+
+      for(person <- CSVContents){
+        weights:+person(2)
+        weightsReported:+person(4)
+      }
+      for(peso<-weights){
+        println(peso)
+      }
+
+
     }
 
     def vizLines()={
 
       val v = DenseVector(1.0, 2.0, 3.0)
+      val w = DenseVector(1.0, 2.0, 3.0)
       System.out.println(v)
 
       val x1 = linspace(-4.0, 4.0, 200)
@@ -408,11 +422,14 @@ object introduccionAscala {
 
       val f2x = sigmoid(2.0*x1)
       val f10x = sigmoid(10.0*x1)
-
-      plt += plot(x1, f2x, name="S(2x)")
-      plt += plot(x1, f10x, name="S(10x)")
+      plt += plot(v,w,'.')
+      //plt += plot(x1, f2x, name="S(2x)")
+      //plt += plot(x1, f10x, name="S(10x)")
 
     }
+//genero, peso, altura, reportedpeso, reportesaltura
+
+
 
     //mapsOperations()
     //tuplesOperations()
@@ -426,7 +443,7 @@ object introduccionAscala {
     //InitOperation()
     //operationGroupBy()
     //ForallOperation()
-    //readCSV()
-    vizLines()
+    readCSV()
+    //vizLines()
   }
 }
