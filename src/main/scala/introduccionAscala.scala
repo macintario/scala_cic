@@ -1,99 +1,59 @@
+import scala.io.Source._
+import scala.collection._
+import scala.Array._
+import breeze.plot
+
+
+
 object introduccionAscala {
-  def main(args: Array[String]):Unit={
+  def main(args: Array[String]):Unit= {
     println("Hello Scala")
-    val tupla = (a: Int) => (a, a+2)
-    println(tupla(1))
-    println(tupla(1)._2)
-    println(tupla(1)._1)
 
-    val y = 10
-    var x= 10
-    x = 15
-    val w = 10e20
-    val m:Byte = 127
-    val bool = !false
-    var x1 = 'X'
-    var person: Any = "Craig"
-    person = 22
+    def mapsOperations() = {
 
-    val bookTitle = "Beginning with Scala"
-    println(s"Book Title is $bookTitle")
+      val n = Map("a" -> 10, "b" -> 15, "c" -> 16)
 
-    def hello() = {"Hello world"}
-    //hello()
-    def square (i:Int) = {i*i}
-    println(square(100))
+      val m = Map(("a", 10), ("b", 15), ("c", 16))
 
-    val books2: List[String] = List("Beginning Scala", "Beginning Groovy", "Beginning Java")
-    println(books2)
+      for (i <- n) println(i)
+      println("----------------------")
 
-    if(x.equals(10)){
-      println("Line one")
-      println("Line two")
-    }else{
-      println(x)
-    }
-    while(!bool){
-      println("Working ....")
-    }
+      var myArray = range(5, 20, 2)
 
-    for(book<-books2) println(book)
+      for (i <- myArray) print(i)
 
-    for(book<-books2
-      if book.contains("Scala")
-    )println(book)
-
-    for {book2 <- books2
-         bookVal = book2.toUpperCase()
-    }println(bookVal)
-
-    val res = 44 match {
-
-      case 44 => true // if wematch 44,theresult is true
-
-      case _ => false // otherwisetheresult isfalse
-    }
-    println("match")
-    println(res)
-
-    /////////////////////////////////
-    //// Programacion funcional///////
-    /////////////////////////////////
-    def functionalProgramming() = {
-      //asignar una fucion a una variable
-      val doubler = (i: Int) => {
-        i * 2
+      def getMax(): Int = {
+        // Finding the largest element
+        var max = myArray(0)
+        for (i <- 1 to (myArray.length - 1)) {
+          if (myArray(i) > max)
+            max = myArray(i)
+        }
+        max
       }
-      println(doubler(2))
+
+      println("____________________________")
+      val capitals = Map("Ireland" -> "Dublin", "Britain" -> "London", "Germany" -> "Berlin")
+      val temp: Map[Int, Int] = Map()
+      val myMax = Map("getMax" -> getMax())
+
+      println("My max is: " + myMax)
+
+      println("Keys in capitals : " + capitals.keys)
+      println("Values in capitals : " + capitals.values)
+      println("Check if capitals is empty : " + capitals.isEmpty)
+      println("Check if temp is empty : " + temp.isEmpty)
+
+      val capitals1 = Map("Ireland" -> "Dublin", "Turkey" -> "Ankara", "Egypt" -> "Cairo")
+      val capitals2 = Map("Germany" -> "Berlin", "Saudi Arabia" -> "Riyadh")
+      // Map concatenation using ++ operator
+      var capitalsConcatenated = capitals1 ++ capitals2
+      println("capitals1 ++ capitals2 : " + capitalsConcatenated)
+
+      // use two maps with ++ as method
+      capitalsConcatenated = capitals1.++(capitals2)
+      println("capitals1.++(capitals2)) : " + capitalsConcatenated)
     }
-
-    //pasar funciones a otras funciones
-    def operation(functionparam:(Int, Int) => Int) {
-      println(functionparam(4,4))
-    }
-
-    val add = (x: Int, y:Int) => { x + y }
-
-    operation(add)
-
-    val multiply = (x: Int, y:Int) => { x * y }
-
-    operation(multiply)
-
-    val subtract = (x: Int, y:Int) => { x - y }
-
-    operation(subtract)
-
-    //
-    // //retornar fuciones
-    def greeting() = (name: String) => {"hello" + " " + name}
-    //
-    val greet = greeting()
-    //
-    println(greet("Reader"))
-
-    var i = 5
-    var j = i.+(7)
-    println(j)
+    mapsOperations()
   }
 }
