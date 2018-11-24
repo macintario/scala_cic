@@ -1,7 +1,12 @@
 import scala.io.Source._
 import scala.collection._
 import scala.Array._
-import breeze.plot
+import scala.util.Random
+import breeze.linalg._
+import breeze.plot._
+import breeze.numerics._
+import breeze.stats._
+import breeze.stats.regression._
 
 
 
@@ -309,6 +314,106 @@ object introduccionAscala {
       println(mp)
 
     }
+    def InitOperation()={
+      println("Lista")
+      println(List(1,2,3,4) init)
+
+      println("Array")
+      var arr = (Array(10,20,30,40,3,4,6) init)
+      for (i<-arr)  println(i)
+      println("Map")
+      println (Map("a" -> 10, "b" -> 15, "c" -> 1) init)
+
+
+    }
+    def operationGroupBy()={
+      println (List(1,-2,3,-4) groupBy (x => if (x >= 0) "positive" else "negative"))
+
+      println("List")
+      var ls = List(1,-2,3,-4) groupBy (x => x >= 0)
+      println (ls)
+
+      println("Array")
+      var arr = Array(2,4,5,-6,3,7,9) groupBy ( x => x%2 == 0)
+      println(arr)
+
+      println("Maps")
+      val m = Map("a" -> 10, "b" -> 15, "c" -> 1) groupBy ( x => x._2%2 == 0)
+      println(m)
+
+    }
+    def ForallOperation()={
+      println("listas")
+      println(List(1,2,3).forall(x => x < 4))
+
+      println(List(1,5,3).forall(x => x < 4))
+
+      println(List(10,20,30).forall(x => x < 3))
+
+      println("Arrays")
+      val numbers: Array[Int] = Array[Int](1, 2, 3, 4, 5, 1, 2, 3, 3, 4, 5)
+      println(numbers.forall(x => x < 3))
+
+      println("Maps")
+      val n = Map("a" -> 10, "b" -> 15, "c" -> 16)
+      println(n.forall(x => x._2 < 3))
+
+    }
+
+    def readFiles()={
+      val lines = fromFile("C:\\Users\\Pedro\\Documents\\intelij\\ipn-workshop\\src\\main\\resources\\sales.txt").getLines
+      for (i <- lines){
+        val l = i.split(",").toList
+        println(l,"--> ",l(0))
+        println("------------------------------")
+        //val m = DenseVector(i.split(","))
+        //println("denseVector: ", m)
+        println("------------------------------")
+        val j = i.split(",").array
+        println(j,"--> ",j(0).toInt)
+      }
+    }
+
+    def readCSV()={
+      import scala.io.Source
+
+      def CSVReader(absPath:String, delimiter:String): List[List[Any]] = {
+        println("Now reading... " + absPath)
+        val MasterList = Source.fromFile(absPath).getLines().toList map {
+          // String#split() takes a regex, thus escaping.
+          _.split("""\""" + delimiter).toList
+        }
+        return MasterList
+      }
+
+      var ALHCorpus = "rep_heigth_weights.csv"
+      var delimiter = "|" // I changed your delimiter to pipe since that's what's in your sample data.
+
+      var CSVContents = CSVReader(ALHCorpus, delimiter)
+
+      println(CSVContents(0))
+    }
+
+    def vizLines()={
+
+      val v = DenseVector(1.0, 2.0, 3.0)
+      System.out.println(v)
+
+      val x1 = linspace(-4.0, 4.0, 200)
+      val fx = sigmoid(x1)
+      val fig = Figure()
+      val plt = fig.subplot(0)
+      plt += plot(x1, fx)
+      //fig.refresh()
+
+      val f2x = sigmoid(2.0*x1)
+      val f10x = sigmoid(10.0*x1)
+
+      plt += plot(x1, f2x, name="S(2x)")
+      plt += plot(x1, f10x, name="S(10x)")
+
+    }
+
     //mapsOperations()
     //tuplesOperations()
     //setOperations()
@@ -317,7 +422,11 @@ object introduccionAscala {
     //existOperation()
     //optionOperation()
     //flatMapOperation()
-    DropOperation()
-
+    //DropOperation()
+    //InitOperation()
+    //operationGroupBy()
+    //ForallOperation()
+    //readCSV()
+    vizLines()
   }
 }
