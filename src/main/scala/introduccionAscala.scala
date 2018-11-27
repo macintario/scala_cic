@@ -8,6 +8,8 @@ import breeze.numerics._
 import breeze.stats._
 import breeze.stats.regression._
 
+import scala.reflect.ClassTag
+
 
 
 object introduccionAscala {
@@ -374,7 +376,7 @@ object introduccionAscala {
       }
     }
 
-    def readCSV()={
+    def readCSV_yo()={
       import scala.io.Source
 
       def CSVReader(absPath:String, delimiter:String): List[List[Any]] = {
@@ -386,7 +388,7 @@ object introduccionAscala {
         return MasterList
       }
 
-      var ALHCorpus = "/home/yan/Descargas/MapReduce-master/scala_cic/src/main/resources/rep_height_weights.csv"
+      var ALHCorpus = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/rep_height_weights.csv"
       var delimiter = "," // I changed your delimiter to pipe since that's what's in your sample data.
 
       var CSVContents = CSVReader(ALHCorpus, delimiter)
@@ -402,6 +404,7 @@ object introduccionAscala {
       }
       //genero, peso, altura, reportedpeso, reportesaltura
 */
+/******************* mine
       val weights = for {persona<-CSVContents}yield persona(2)
       val weightsReported = for {persona<-CSVContents} yield persona(4)
       val higths = for {persona<-CSVContents}yield persona(3)
@@ -414,10 +417,71 @@ object introduccionAscala {
       val k = higthsReported.map(x => x.toString.toDouble)
       plt += plot(v,w,'.')
       plt += plot(h,k,'.')
-//      plt += plot(v,h,'.')
-//      plt += plot(w,k,'.')
+      plt += plot(v,h,'.')
+      plt += plot(w,k,'.')
       fig.refresh()
+*/
 
+    }
+
+    def readCSV()={
+      import scala.io.Source
+
+
+      var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+
+      val fileName = "rep_height_weights.csv"
+
+      val file = Source.fromFile(DataDirectory + fileName)
+      val lines = file.getLines.toVector
+      val splitLines = lines.map { _.split(',') }
+
+      def fromList[T:ClassTag](index:Int, converter:(String => T)):DenseVector[T] =
+        DenseVector.tabulate(lines.size) { irow => converter(splitLines(irow)(index)) }
+
+      val genders = fromList(1, elem => elem.replace("\"", "").head)
+      val weights = fromList(2, elem => elem.toDouble)
+      val heights = fromList(3, elem => elem.toDouble)
+      val reportedWeights = fromList(4, elem => elem.toDouble)
+      val reportedHeights = fromList(5, elem => elem.toDouble)
+
+      val maleVector = DenseVector.fill(genders.length)('M')
+      println(maleVector)
+      val isMale = (genders :== maleVector)
+      println("\nis male")
+      println(isMale)
+
+      println("\nmaleHeightsReported")
+      val maleHeightsReported = reportedHeights(isMale).toDenseVector
+      println(maleHeightsReported)
+
+      println("\nnumero de hombres en el data set")
+      println(sum(I(isMale)))
+
+      println("\nAltura promedio")
+      println(mean(heights))
+
+      println("\nAltura promedio de los hombres")
+      println(mean(heights(isMale)))
+
+      println("\nPeso promedio de las mujeres")
+      println(mean(weights(!isMale)))
+
+      println("\nnumero de hombres que sobre-estimaron su Altura")
+
+      val sobre_estimaron = (reportedHeights :> heights).toDenseVector
+      println("##########")
+      println(reportedHeights)
+      println(heights)
+
+      println("overReportMask")
+      println(sobre_estimaron)
+
+      println("isMale")
+      println(isMale)
+
+      println("suma")
+      println(sum(I(sobre_estimaron :& isMale)))
 
     }
 
@@ -443,6 +507,145 @@ object introduccionAscala {
     }
 
 
+    def breezeVectors() ={
+      import breeze.linalg._
+      println("Dense Vector  1-D ")
+      val v = DenseVector(1.0, 2.0, 3.0)
+      println(v)
+      println(v(1))
+      println(v :* 2.0) // :* is 'element-wise multiplication'
+      println(v :+ DenseVector(4.0, 5.0, 6.0)) // :+ is 'element-wise addition'
+      //println(v :+ DenseVector(8.0, 9.0))
+      println(v :+ DenseVector(8.0, 9.0,2.0))
+
+      println("\nv1  DOT  v2")
+      val v2 = DenseVector(4.0, 5.0, 6.0)
+      println(v dot v2)
+      println("\nelement-wise operators")
+      println(v + v2)
+      println(2.0 :* v + v2) // !! equivalent to 2.0 :* (v + v2)
+      println(2.0 :* v :+ v2) // equivalent to (2.0 :* v) :+ v2
+
+
+      println("Matrices")
+      val m = DenseMatrix((1.0, 2.0, 3.0), (4.0, 5.0, 6.0))
+      println(m)
+      println(2.0 :* m)
+
+      println("\nBuilding vectors and matrices")
+      val VecOnes = DenseVector.ones[Double](5)
+      println(VecOnes)
+
+      println("\ncreate a vector of 10 values\ndistributed uniformly between 0 and 1")
+      val vecLin = linspace(0.0, 1.0, 10)
+      println(vecLin)
+
+      println("\nconstruct vectors and matrices from functions")
+      val vecTab = DenseVector.tabulate(4) { i => 5.0 * i }
+      println(vecTab)
+
+      val matTab = DenseMatrix.tabulate[Int](2, 3) {
+        (irow, icol) => irow*2 + icol
+      }
+      println(matTab)
+
+      println("\ncreate random vectors and matrices")
+      val ranVect =DenseVector.rand(2)
+      println(ranVect)
+
+      val ranMat = DenseMatrix.rand(2, 3)
+      println(ranMat)
+
+      println("\nconstruct vectors from Scala arrays")
+      val arrayToDense = DenseVector(Array(2, 3, 4))
+      println(arrayToDense)
+
+      println("\nconstruct vectors from other Scala collections, you must use the splat operator")
+      val l = Seq(2, 3, 4)
+      val seqToDense = DenseVector(l :_ *)
+      println(seqToDense)
+
+      println("\nIndexing and Slicing")
+      val v1 = DenseVector.tabulate(5) { _.toDouble }
+      println (v1(-1)) // last element
+      println(v1(1 to 3))
+      println(v1(1 until 3)) // equivalent to Python v[1:3]
+      println(v1(v1.length-1 to 0 by -1)) // reverse view of v
+
+      println("\nSelect elements at index 2 and 4")
+      val vSlice = v1(2, 4) // Select elements at index 2 and 4
+      println(vSlice)
+      //val vSlice2 = v(2, 7)
+
+      println("\nindex vectors using Boolean arrays")
+      val mask = DenseVector(true, false, false, true, true)
+      println(mask)
+
+      println("\nelements of v for which mask is true")
+      val vecWithIndexTrue = v1(mask).toDenseVector
+      println(vecWithIndexTrue)
+
+      println("\nfiltering certain elements in a vector")
+      val filtered = v1(v1 :< 3.0) // :< is element-wise "less than"
+      println(filtered)
+      val sliceTDense = filtered.toDenseVector
+      println(filtered)
+
+      println("Matrix")
+      val mat = DenseMatrix((1.0, 2.0, 3.0,5.0),
+        (5.0, 6.0, 7.0,9.0),
+        (10.0, 20.0, 30.0,50.0))
+      println(mat)
+      println(mat(1,2))
+      println(mat(1,-1))
+      println("\n 3 filas, 2 columnas")
+      println(mat(0 until 3, 0 until 2))
+      println("\nslicing types for rows and columns")
+      println(mat(0 until 2, 0))
+
+      println("\nsymbol :: can be used to indicate every element along a particular direction")
+      println(mat(::, 1))
+
+
+      println("\nMutating vectors and matrices")
+      val v3 = DenseVector(1.0, 2.0, 3.0)
+      v3(1) = 22.0 // v is now DenseVector(1.0, 22.0, 3.0)
+      println(v3)
+      v3(0 until 2) := DenseVector(50.0, 51.0) // set elements at position 0 and 1
+      println(v3)
+      v3(0 until 2) := 0.0 // equivalent to v(0 until 2) :=     DenseVector(0.0, 0.0)
+      println(v3)
+      v3 :+= 4.0
+      println(v3)
+
+      println("\nupdating the view will update the underlying vector and vice-versa")
+      val v4 = DenseVector.tabulate(6) { _.toDouble }
+      println(v4)
+      val viewEvens = v(0 until v.length by 2)
+      println(viewEvens)
+      viewEvens := 10.0 // mutate viewEvens
+      println(viewEvens)
+
+      println("\n v4 has also been mutated!")
+      println(v4)
+
+      println("\nconstruct a copy of viewEvens")
+      val copyEvens = v(0 until v.length by 2).copy
+      println(copyEvens)
+
+      println("\nMatrix multiplication")
+      val mat1 = DenseMatrix((2.0, 3.0), (5.0, 6.0), (8.0, 9.0))
+      val mat2 = DenseMatrix((10.0, 11.0), (12.0, 13.0))
+      println(mat1*mat2)
+
+      println("\ntranspose operation")
+      val v5 = DenseVector(1.0, 2.0)
+      val vt = v5.t
+
+      println(vt * mat2)
+
+
+    }
 
 
     //mapsOperations()
@@ -459,5 +662,6 @@ object introduccionAscala {
     //ForallOperation()
     readCSV()
   //  vizLines()
+   // breezeVectors()
   }
 }
