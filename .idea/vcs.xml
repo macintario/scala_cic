@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="VcsDirectoryMappings">
+    <mapping directory="/git/Descargas/MapReduce-master/scala_cic" vcs="Git" />
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
   </component>
 </project>

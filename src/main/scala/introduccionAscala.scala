@@ -386,13 +386,13 @@ object introduccionAscala {
         return MasterList
       }
 
-      var ALHCorpus = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/rep_height_weights.csv"
+      var ALHCorpus = "/home/yan/Descargas/MapReduce-master/scala_cic/src/main/resources/rep_height_weights.csv"
       var delimiter = "," // I changed your delimiter to pipe since that's what's in your sample data.
 
       var CSVContents = CSVReader(ALHCorpus, delimiter)
 
       println(CSVContents(0))
-
+/*
       var weights = new Array [Double](0)
       var weightsReported= new Array [Double] (0)
 
@@ -400,9 +400,23 @@ object introduccionAscala {
         weights:+person(2)
         weightsReported:+person(4)
       }
-      for(peso<-weights){
-        println(peso)
-      }
+      //genero, peso, altura, reportedpeso, reportesaltura
+*/
+      val weights = for {persona<-CSVContents}yield persona(2)
+      val weightsReported = for {persona<-CSVContents} yield persona(4)
+      val higths = for {persona<-CSVContents}yield persona(3)
+      val higthsReported = for {persona<-CSVContents} yield persona(5)
+      val fig = Figure()
+      val plt = fig.subplot(0)
+      val v = weights.map(x => x.toString.toDouble)
+      val w = weightsReported.map(x => x.toString.toDouble)
+      val h = higths.map(x => x.toString.toDouble)
+      val k = higthsReported.map(x => x.toString.toDouble)
+      plt += plot(v,w,'.')
+      plt += plot(h,k,'.')
+//      plt += plot(v,h,'.')
+//      plt += plot(w,k,'.')
+      fig.refresh()
 
 
     }
@@ -427,7 +441,7 @@ object introduccionAscala {
       //plt += plot(x1, f10x, name="S(10x)")
 
     }
-//genero, peso, altura, reportedpeso, reportesaltura
+
 
 
 
@@ -444,6 +458,6 @@ object introduccionAscala {
     //operationGroupBy()
     //ForallOperation()
     readCSV()
-    //vizLines()
+  //  vizLines()
   }
 }
