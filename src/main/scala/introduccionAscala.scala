@@ -12,7 +12,7 @@ import scala.reflect.ClassTag
 
 
 
-object introduccionAscala {
+class introduccionAscala {
   def main(args: Array[String]):Unit= {
     println("Hello Scala")
 
@@ -651,6 +651,61 @@ object introduccionAscala {
 
     }
 
+    def predecirPeso()={
+
+      import scala.io.Source
+
+
+      var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+
+      val fileName = "rep_height_weights.csv"
+
+      val file = Source.fromFile(DataDirectory + fileName)
+      val lines = file.getLines.toVector
+      val splitLines = lines.map { _.split(',') }
+
+      def fromList[T:ClassTag](index:Int, converter:(String => T)):DenseVector[T] =
+        DenseVector.tabulate(lines.size) { irow => converter(splitLines(irow)(index)) }
+
+      val genders = fromList(1, elem => elem.replace("\"", "").head)
+      val weights = fromList(2, elem => elem.toDouble)
+      val heights = fromList(3, elem => elem.toDouble)
+      val reportedWeights = fromList(4, elem => elem.toDouble)
+      val reportedHeights = fromList(5, elem => elem.toDouble)
+
+      val fig = Figure("height vs. weight")
+      val plt = fig.subplot(0)
+      plt += plot(reportedHeights, reportedWeights, '+', colorcode="black") //styles: '-' ,'+',  '.'
+      fig.refresh()
+
+      println("Variable independiente")
+      val indep = reportedWeights
+      println(indep)
+      println("\nVariable dependiente")
+      val dep = DenseMatrix.horzcat(
+        DenseMatrix.ones[Double](reportedHeights.length, 1),
+        reportedHeights.toDenseMatrix.t
+      )
+      println(dep)
+
+      println("Modelo minimos cuadros o regresion lineal")
+      val leastSquaresResult = leastSquares(dep, indep)
+
+      val Array(a, b) = leastSquaresResult.coefficients.toArray
+      println(leastSquaresResult.coefficients)
+      println(leastSquaresResult.rSquared)
+      println("\nmodel: weight (Kg ) = −131.04 + 1.1522× height (cm)")
+
+      val xPoints = linspace(min(reportedHeights), max(reportedHeights))
+      println("\nxPoints")
+      println(xPoints)
+      val fittedWeights = a :+ (b :* xPoints)
+      println("\nfittedWeights")
+      plt += plot(xPoints, fittedWeights, colorcode="red")
+      fig.refresh()
+
+    }
+
     //mapsOperations()
     //tuplesOperations()
     //setOperations()
@@ -663,8 +718,9 @@ object introduccionAscala {
     //InitOperation()
     //operationGroupBy()
     //ForallOperation()
-    readCSV()
+   // readCSV()
   //  vizLines()
    // breezeVectors()
+    predecirPeso()
   }
 }
