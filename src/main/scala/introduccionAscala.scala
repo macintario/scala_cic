@@ -424,66 +424,6 @@ object introduccionAscala {
 
     }
 
-    def readCSV()={
-      import scala.io.Source
-
-
-      var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
-
-      val fileName = "rep_height_weights.csv"
-
-      val file = Source.fromFile(DataDirectory + fileName)
-      val lines = file.getLines.toVector
-      val splitLines = lines.map { _.split(',') }
-
-      def fromList[T:ClassTag](index:Int, converter:(String => T)):DenseVector[T] =
-        DenseVector.tabulate(lines.size) { irow => converter(splitLines(irow)(index)) }
-
-      val genders = fromList(1, elem => elem.replace("\"", "").head)
-      val weights = fromList(2, elem => elem.toDouble)
-      val heights = fromList(3, elem => elem.toDouble)
-      val reportedWeights = fromList(4, elem => elem.toDouble)
-      val reportedHeights = fromList(5, elem => elem.toDouble)
-
-      val maleVector = DenseVector.fill(genders.length)('M')
-      println(maleVector)
-      val isMale = (genders :== maleVector)
-      println("\nis male")
-      println(isMale)
-
-      println("\nmaleHeightsReported")
-      val maleHeightsReported = reportedHeights(isMale).toDenseVector
-      println(maleHeightsReported)
-
-      println("\nnumero de hombres en el data set")
-      println(sum(I(isMale)))
-
-      println("\nAltura promedio")
-      println(mean(heights))
-
-      println("\nAltura promedio de los hombres")
-      println(mean(heights(isMale)))
-
-      println("\nPeso promedio de las mujeres")
-      println(mean(weights(!isMale)))
-
-      println("\nnumero de hombres que sobre-estimaron su Altura")
-
-      val sobre_estimaron = (reportedHeights :> heights).toDenseVector
-      println("##########")
-      println(reportedHeights)
-      println(heights)
-
-      println("overReportMask")
-      println(sobre_estimaron)
-
-      println("isMale")
-      println(isMale)
-
-      println("suma")
-      println(sum(I(sobre_estimaron :& isMale)))
-
-    }
 
     def vizLines()={
 
@@ -647,6 +587,69 @@ object introduccionAscala {
 
     }
 
+
+    def readCSV()={
+      import scala.io.Source
+
+
+      var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+
+      val fileName = "rep_height_weights.csv"
+
+      val file = Source.fromFile(DataDirectory + fileName)
+      val lines = file.getLines.toVector
+      val splitLines = lines.map { _.split(',') }
+
+      def fromList[T:ClassTag](index:Int, converter:(String => T)):DenseVector[T] =
+        DenseVector.tabulate(lines.size) { irow => converter(splitLines(irow)(index)) }
+
+      val genders = fromList(1, elem => elem.replace("\"", "").head)
+      val weights = fromList(2, elem => elem.toDouble)
+      val heights = fromList(3, elem => elem.toDouble)
+      val reportedWeights = fromList(4, elem => elem.toDouble)
+      val reportedHeights = fromList(5, elem => elem.toDouble)
+
+      val maleVector = DenseVector.fill(genders.length)('M')
+      println(maleVector)
+      val isMale = (genders :== maleVector)
+      println("\nis male")
+      println(isMale)
+
+      println("\nmaleHeightsReported")
+      val maleHeightsReported = reportedHeights(isMale).toDenseVector
+      println(maleHeightsReported)
+
+      println("\nnumero de hombres en el data set")
+      println(sum(I(isMale)))
+
+      println("\nAltura promedio")
+      println(mean(heights))
+
+      println("\nAltura promedio de los hombres")
+      println(mean(heights(isMale)))
+
+      println("\nPeso promedio de las mujeres")
+      println(mean(weights(!isMale)))
+
+      println("\nnumero de hombres que sobre-estimaron su Altura")
+
+      val sobre_estimaron = (reportedHeights :> heights).toDenseVector
+      val sobre_estimaronW = (reportedWeights :> weights).toDenseVector
+      println("##########")
+      println(reportedHeights)
+      println(heights)
+
+      println("overReportMask")
+      println(sobre_estimaron)
+
+      println("isMale")
+      println(isMale)
+
+      println("suma")
+      println(sum(I(sobre_estimaron :& isMale)))
+      println(sum(I(sobre_estimaronW :& !isMale)))
+
+    }
 
     //mapsOperations()
     //tuplesOperations()
