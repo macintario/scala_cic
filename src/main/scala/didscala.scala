@@ -27,8 +27,10 @@ object didscala {
     val fecha = fromList(1, elem => elem.substring(3,5).toInt)
     val aceleraciones = fromList(2,elem =>elem.toDouble )
     //print(vehiculos)
-
-
+    val vectorG = (vehiculos :> 21).toDenseVector //Vehiculos intervenidos del 21 en adelante
+    val vectorT = (fecha :> 5).toDenseVector  //Fechas posteriores a mayo
+    println(vectorG)
+    println(vectorT)
     println("OK")
   }
   analiza()
