@@ -3,7 +3,7 @@ import breeze.stats.regression.leastSquares
 
 import scala.reflect.ClassTag
 
-object distancia_comb {
+class distancia_comb {
 
   def main(args: Array[String]):Unit= {
     println("Hello Scala")
@@ -47,7 +47,7 @@ object distancia_comb {
     // y=mx+b  => x=(y-b)/m
     println((200-b)/m)
     println("3.- Total de combustible")
-    println(sum(litros))
+    println(sum(distancia)/sum(litros))
     println("4.- Total de conbustible usado por el vehículo 10")
     val v4Vector = DenseVector.fill(vehiculos.length)("Vehiculo10")
     val v4 = (vehiculos :== v4Vector)
