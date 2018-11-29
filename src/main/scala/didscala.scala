@@ -13,46 +13,53 @@ object didscala {
     println("DID Scala")
   }
   def analiza() = {
-    var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+//    var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+    var DataDirectory = "/home/yan/Descargas/MapReduce-master/scala_cic/src/main/resources/"
 
     val fileName = "aceleracionBruscaData.csv"
 
     val file = Source.fromFile(DataDirectory + fileName)
     val lines = file.getLines.toVector.drop(1)
     val splitLines = lines.map { _.split(',') }
+    def intervencion(s : String) = { if (s.substring(8).toInt < 21) 0.0 else 1.0}  // vehículos de 0 a 20 control, 21 en adelante intervencion
+
+    def tiempo(s : String) = { if (s.substring(3,5).toInt < 6) 0.0 else 1.0}  // mayo o antes, sin intervencion, junio y despues intervenido
+//    def isControl(s : String) = { s.substring(8) }
 
     def fromList[T:ClassTag](index:Int, converter:(String => T)):DenseVector[T] =
       DenseVector.tabulate(lines.size) { irow => converter(splitLines(irow)(index)) }
+
     //vehiculo,fecha,aceleraciones
-    val vehiculos = fromList(0, elem => elem.substring(8).toInt)
-    val fecha = fromList(1, elem => elem.substring(3,5).toInt)
+    val vehiculos = fromList(0, elem =>  intervencion(elem) )
+    val fecha = fromList(1, elem => tiempo(elem))
     val aceleraciones = fromList(2,elem =>elem.toDouble )
-    //print(vehiculos)
-    val vectorG = (vehiculos :> 21).toDenseVector //Vehiculos intervenidos del 21 en adelante
-    val vectorT = (fecha :> 5).toDenseVector  //Fechas posteriores a mayo
-    //println(vectorG)
-    //println(vectorT)
 
-    //T = 0; G = 0
-    val acel_00 = aceleraciones(!vectorT(!vectorG)).toDenseVector
-    //T = 0; G = 1
-    val acel_01 = aceleraciones(!vectorT(vectorG)).toDenseVector
-    //T = 1; G = 0
-    val acel_10 = aceleraciones(vectorT(!vectorG)).toDenseVector
-    //T = 1; G = 1
-    val acel_11 = aceleraciones(vectorT(vectorG)).toDenseVector
+    val indep = aceleraciones
 
+    var vTS :DenseVector[Double] = DenseVector.zeros(vehiculos.length)
+    for (i <- 0 to vehiculos.length-1 ){
+      vTS(i) = fecha(i)*vehiculos(i)
+    }
 
+    val dep1 = DenseMatrix.horzcat(
+      DenseMatrix.ones[Double](vehiculos.length, 1),
+      fecha.toDenseMatrix.t
+    )
+    val dep2 = DenseMatrix.horzcat(
+      dep1,
+      vehiculos.toDenseMatrix.t
+    )
+    val dep = DenseMatrix.horzcat(
+      dep2,
+      vTS.toDenseMatrix.t
+    )
+    val leastSquaresResult = leastSquares(dep, indep)
+    println(leastSquaresResult.coefficients)
+    println(leastSquaresResult.rSquared)
 
-    val bet_0 = mean(acel_00)
-    println(bet_0)
-    val bet_1 = mean(acel_10) - bet_0
-    println(bet_1)
-    val bet_2 = mean(acel_10) - bet_0
-    println(bet_2)
-    val bet_3 = (mean(acel_11) - mean(acel_01))
-        - (mean(acel_10)-mean(acel_00))
-    println(bet_3)
+    //println(dep)
+    //println(fecha)
+
 
     println("OK")
   }

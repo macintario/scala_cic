@@ -12,7 +12,7 @@ import scala.reflect.ClassTag
 
 
 
-class introduccionAscala {
+object introduccionAscala {
   def main(args: Array[String]):Unit= {
     println("Hello Scala")
 
@@ -656,7 +656,8 @@ class introduccionAscala {
       import scala.io.Source
 
 
-      var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+//      var DataDirectory = "/home/aulae1-b6/map-reduce/holaScala/src/main/resources/"
+      var DataDirectory = "/home/yan/Descargas/MapReduce-master/scala_cic/src/main/resources/"
 
       val fileName = "rep_height_weights.csv"
 
