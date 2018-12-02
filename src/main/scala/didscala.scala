@@ -10,10 +10,21 @@
 
 
 import scala.io.Source
+import scala.io.Source._
+import scala.collection._
+import scala.Array._
+
 import scala.reflect.ClassTag
 import breeze.linalg.{DenseMatrix, DenseVector, sum}
+import breeze.plot.Figure
 import breeze.stats.regression.leastSquares
 import breeze.stats._
+import breeze.linalg._
+import breeze.plot._
+import breeze.numerics._
+import breeze.stats._
+import breeze.stats.regression._
+
 
 import scala.reflect.ClassTag
 
@@ -90,8 +101,46 @@ object didscala {
     print("T=1  ")
     println(y(1,0),y(1,1))
 
+    //El valor esperado del grupo de intervención sin intervencion es:
+    // La salida del grupo de control en T=1 mas la diferencia (supuesta constante en el modelo)
+    // entre la salida del grupo de intervencion y la salida en el de control en T =0
 
+    val q = y(1,0) + (y(0,1) - y(0,0))
+    print("Valor esperado de salida sin intervención: ")
+    println(q)
 
+    //La tasa de de crecimiento es la relación entre la diferencia de la intervención en el grupo intervenido
+    // sobre el valor esperado sin intervención:
+
+    val tc = (y(1,1)-q) / q
+
+    print("Tasa de crecimiento:")
+    println(tc)
+
+    //graficamos grupo de control
+    val fig = Figure("Diferencias en diferencias")
+    val plt = fig.subplot(0)
+    val xPoints = linspace(0.0,1.0)
+    var b = y(0,0)
+    var m = y(1,0) - y(0,0)
+    val s0Points = b :+ (m :* xPoints)
+    plt += plot(xPoints,s0Points,colorcode = "blue",name = "Control")
+    //graficamos grupo intervenido
+    b = y(0,1)
+    m = y(1,1) - y(0,1)
+    val s1Points = b :+ (m :* xPoints)
+    plt += plot(xPoints,s1Points,colorcode = "red", name ="Intervenido")
+    //graficamos proyección sin intervención
+    b = y(0,1)
+    m = y(1,0) - y(0,0)
+    val qPoints = b :+ (m :* xPoints)
+    plt += plot(xPoints,qPoints,colorcode = "Green",style = '.', name = " Sin intervención ")
+    plt.ylabel = "Frenadas Bruscas"
+    plt.xlabel = "Tiempo: T=0 Antes de Intervencón, T=1 Después de intervención"
+    plt.ylim(0, y(0,1)*1.1)
+    plt.legend = true
+    //mostramos la ventana con la gráfica
+    fig.refresh
     println("OK")
   }
 
