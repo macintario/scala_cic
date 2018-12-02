@@ -3,8 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/holaScala.iml" filepath="$PROJECT_DIR$/.idea/modules/holaScala.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/holaScala-build.iml" filepath="$PROJECT_DIR$/.idea/modules/holaScala-build.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/scala_cic.iml" filepath="$PROJECT_DIR$/.idea/scala_cic.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/scala_cic-build.iml" filepath="$PROJECT_DIR$/.idea/modules/scala_cic-build.iml" />
     </modules>
   </component>
 </project>
