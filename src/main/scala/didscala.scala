@@ -109,10 +109,12 @@ object didscala {
     print("Valor esperado de salida sin intervención: ")
     println(q)
 
-    //La tasa de de crecimiento es la relación entre la diferencia de la intervención en el grupo intervenido
+    //La tasa de de crecimiento es la relación entre
+    // la diferencia de la intervención
+    // en el grupo intervenido
     // sobre el valor esperado sin intervención:
 
-    val tc = (y(1,1)-q) / q
+    val tc = (y(1,1)/q) - 1
 
     print("Tasa de crecimiento:")
     println(tc)
